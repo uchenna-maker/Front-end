@@ -20,7 +20,7 @@ import { useApiSend } from "../hooks/useApi";
 import { markAsTaken } from "../urls";
 import toast from "react-hot-toast";
 
-// Function to generate events from medication data
+
 const generateMedicationEvents = (medicationData) => {
   const events = [];
 
@@ -38,13 +38,13 @@ const generateMedicationEvents = (medicationData) => {
       "#546E7A",
     ];
 
-    // Select a consistent color based on medication ID
+    
     const colorIndex = Math.abs(
       medication.id.split('').reduce((sum, ch) => sum + ch.charCodeAt(0), 0)
     ) % colors.length;
     const medicationColor = colors[colorIndex];
 
-    // Generate events for each day and dosage
+    
     for (let date = moment(startDate); date.isSameOrBefore(endDate); date.add(1, 'days')) {
       medication.dosages.forEach((dosage) => {
         const intakeTime = moment(dosage.intakeTime);
@@ -79,7 +79,7 @@ const generateMedicationEvents = (medicationData) => {
   return events;
 };
 
-// Event Details Modal with Mark as Done
+
 const EventDetailsModal = ({
   user,
   event,
@@ -168,14 +168,14 @@ const EventDetailsModal = ({
   );
 };
 
-// Custom Event Component to show color and completion status
+
 const CustomEvent = ({ event }) => {
   return (
     <div
       className="p-1 text-xs relative"
       style={{
         backgroundColor: event.isCompleted
-          ? "#48BB78" // Green for completed events
+          ? "#48BB78" 
           : event.color,
         color: "white",
         borderRadius: "4px",
@@ -192,35 +192,35 @@ const CustomEvent = ({ event }) => {
   );
 };
 
-// Custom Date Cell Wrapper
+
 const CustomDateCellWrapper = ({ children, value, darkMode }) => {
   const date = moment(value).format('YYYY-MM-DD');
   const events = children.props.events || [];
 
-  // Filter events for this date
+  
   const dateEvents = events.filter(e => moment(e.start).format('YYYY-MM-DD') === date);
 
-  // Group by medication
+  
   const medsMap = dateEvents.reduce((map, e) => {
     map[e.medicationId] = map[e.medicationId] || [];
     map[e.medicationId].push(e);
     return map;
   }, {});
 
-  // All taken check
+  
   const allTaken = dateEvents.length > 0 && Object.values(medsMap).every(arr => arr.every(e => e.isCompleted));
 
   return React.cloneElement(children, {
     style: {
       ...children.props.style,
       backgroundColor: allTaken
-        ? "#9AE6B4" // Light green if all dosages done
+        ? "#9AE6B4" 
         : darkMode ? "rgba(63,189,241,0.2)" : "transparent",
     },
   });
 };
 
-// Main Calendar Component
+
 export const MedicationCalendar = ({ medicationData, darkMode }) => {
   const localizer = momentLocalizer(moment);
   const [events, setEvents] = useState([]);
@@ -253,10 +253,10 @@ export const MedicationCalendar = ({ medicationData, darkMode }) => {
   const goToPreviousMonth = () => setCurrentDate(moment(currentDate).subtract(1, "month").toDate());
   const goToNextMonth = () => setCurrentDate(moment(currentDate).add(1, "month").toDate());
 
-  // Text color class based on dark mode
+  
   const textColorClass = darkMode ? "text-white" : "text-black";
 
-  // Custom components with dark mode prop
+  
   const components = {
     event: CustomEvent,
     dateCellWrapper: (props) => <CustomDateCellWrapper {...props} darkMode={darkMode} />
